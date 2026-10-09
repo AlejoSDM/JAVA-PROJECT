@@ -9,14 +9,14 @@ CREATE DATABASE IF NOT EXISTS TecStoreAlejo
 USE TecStoreAlejo;
 
 CREATE TABLE IF NOT EXISTS marca (
-    id VARCHAR(20) NOT NULL,
+    id INT NOT NULL AUTO_INCREMENT,
     nombre VARCHAR(100) NOT NULL,
     PRIMARY KEY (id)
 ) ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS celular (
-    id VARCHAR(20) NOT NULL,
-    marca_id VARCHAR(20) NOT NULL,
+    id INT NOT NULL AUTO_INCREMENT,
+    marca_id INT NOT NULL,
     modelo VARCHAR(100) NOT NULL,
     sistema_operativo ENUM('IOS', 'ANDROID', 'KAIOS') NOT NULL,
     gama ENUM('ALTA', 'MEDIA', 'BAJA') NOT NULL,
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS celular (
 ) ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS cliente (
-    id VARCHAR(20) NOT NULL,
+    id INT NOT NULL AUTO_INCREMENT,
     nombre VARCHAR(100) NOT NULL,
     cedula VARCHAR(20) NOT NULL,
     correo VARCHAR(150) NOT NULL,
@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS cliente (
 ) ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS empleado (
-    id VARCHAR(20) NOT NULL,
+    id INT NOT NULL AUTO_INCREMENT,
     nombre VARCHAR(100) NOT NULL,
     telefono VARCHAR(30) NOT NULL,
 
@@ -56,11 +56,13 @@ CREATE TABLE IF NOT EXISTS empleado (
 ) ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS ventas (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id INT NOT NULL AUTO_INCREMENT,
     fecha DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     total DOUBLE NOT NULL,
-    id_empleado VARCHAR(20) NULL,
-    id_cliente VARCHAR(20) NOT NULL,
+    id_empleado INT NULL,
+    id_cliente INT NOT NULL,
+
+    PRIMARY KEY (id),
 
     CONSTRAINT fk_venta_empleado
         FOREIGN KEY (id_empleado) REFERENCES empleado(id),
@@ -73,12 +75,14 @@ CREATE TABLE IF NOT EXISTS ventas (
 ) ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS detalle_ventas (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id INT NOT NULL AUTO_INCREMENT,
     id_venta INT NOT NULL,
-    id_celular VARCHAR(20) NOT NULL,
+    id_celular INT NOT NULL,
     cantidad INT NOT NULL,
     precio_unitario DOUBLE NOT NULL,
     subtotal DOUBLE NOT NULL,
+
+    PRIMARY KEY (id),
 
     CONSTRAINT fk_detalle_venta
         FOREIGN KEY (id_venta) REFERENCES ventas(id),

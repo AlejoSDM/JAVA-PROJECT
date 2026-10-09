@@ -1,10 +1,7 @@
 package modelo;
 
-import java.util.UUID;
-import java.util.function.Supplier;
-
 public class Celular {
-    private String id;
+    private int id;
     private Marca marca;
     private String modelo;
     private SistemaOperativo sistemaop;
@@ -13,27 +10,29 @@ public class Celular {
     private int stock_minimo;
     private int stock;
 
-    public Celular(Marca marca, String modelo, SistemaOperativo sistemaop, CategoriaGama gama, double precio, int stock, int stock_minimo) {
-        this.id = generarID.get();
+    public Celular(Marca marca, String modelo, SistemaOperativo sistemaop, CategoriaGama gama, double precio, int stock_minimo, int stock) {
         this.marca = marca;
         this.modelo = modelo;
         this.sistemaop = sistemaop;
         this.gama = gama;
         this.precio = precio;
-        this.stock = stock;
         this.stock_minimo = stock_minimo;
-    }
-    
-    //SUPPLIER: generar un sku automatico cuando se cree un producto nuevo.
-    private static final Supplier<String> generarID=()-> 
-            "ID-"+UUID.randomUUID().toString().substring(0,5).toUpperCase();
-
-    public String getId() {
-        return id;
+        this.stock = stock;
     }
 
-    public void setId(String id) {
+    public Celular(int id, Marca marca, String modelo, SistemaOperativo sistemaop, CategoriaGama gama, double precio, int stock_minimo, int stock) {
         this.id = id;
+        this.marca = marca;
+        this.modelo = modelo;
+        this.sistemaop = sistemaop;
+        this.gama = gama;
+        this.precio = precio;
+        this.stock_minimo = stock_minimo;
+        this.stock = stock;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public Marca getMarca() {
@@ -92,6 +91,7 @@ public class Celular {
         this.stock = stock;
     }
 
+    
     @Override
     public String toString() {
         return """
@@ -105,5 +105,4 @@ public class Celular {
                STOCK MINIMO:     %S
                """.formatted(id, marca, modelo, sistemaop, gama, precio, stock, stock_minimo);
     }
-
 }

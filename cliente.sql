@@ -5,7 +5,6 @@ USE TecStoreAlejo;
 DELIMITER $$
 /*SE CREAN VARIABLES QUE DESPUES TOMARAN VALOR GRACIAS A JAVA DONDE SE CREARA EL CLIENTE*/
 CREATE PROCEDURE sp_cliente_insertar(
-    IN p_id VARCHAR(20),
     IN p_nombre VARCHAR(100),
     IN p_cedula VARCHAR(20),
     IN p_correo VARCHAR(150),
@@ -13,8 +12,8 @@ CREATE PROCEDURE sp_cliente_insertar(
 )
 BEGIN
     /*ASI MISMO SE GUARDARAN EN LAS COLUMNAS QUE CORRESPONDEN*/
-    INSERT INTO cliente (id, nombre, cedula, correo, telefono)
-    VALUES (p_id, p_nombre, p_cedula, p_correo, p_telefono);
+    INSERT INTO cliente (nombre, cedula, correo, telefono)
+    VALUES (p_nombre, p_cedula, p_correo, p_telefono);
 END$$
 /*ACA SE LISTA LOS CLIENTES QUE EXISTEN*/
 CREATE PROCEDURE sp_cliente_listar()
@@ -24,7 +23,7 @@ BEGIN
 END$$
 /*SE ACTUALIZA CLIENTE SEGUN EL ID SELECCIONADO*/
 CREATE PROCEDURE sp_cliente_actualizar(
-    IN p_id VARCHAR(20),
+    IN p_id INT,
     IN p_nombre VARCHAR(100),
     IN p_cedula VARCHAR(20),
     IN p_correo VARCHAR(150),
@@ -40,7 +39,7 @@ BEGIN
 END$$
 /*SE ELIMINA EL CLIENTE SEGUN EL ID SELECCIONADO*/
 CREATE PROCEDURE sp_cliente_eliminar(
-    IN p_id VARCHAR(20)
+    IN p_id INT
 )
 BEGIN
     DELETE FROM cliente

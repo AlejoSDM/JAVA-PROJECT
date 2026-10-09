@@ -1,25 +1,23 @@
 package modelo;
 
-import java.util.UUID;
-import java.util.function.Supplier;
-
 public class Empleado {
     
-    private final String id;
-    private final String nombre;
-    private final String telefono;
+    private int id;
+    private String nombre;
+    private String telefono;
 
     public Empleado(String nombre, String telefono) {
-        this.id = generarID.get();
         this.nombre = nombre;
         this.telefono = telefono;
     }
-    
-      //SUPPLIER: generar un sku automatico cuando se cree un producto nuevo.
-    private static final Supplier<String> generarID=()-> 
-            "ID-"+UUID.randomUUID().toString().substring(0,6).toUpperCase();
-    
-    public String getId() {
+
+    public Empleado(int id, String nombre, String telefono) {
+        this.id = id;
+        this.nombre = nombre;
+        this.telefono = telefono;
+    }
+
+    public int getId() {
         return id;
     }
 
@@ -27,10 +25,19 @@ public class Empleado {
         return nombre;
     }
 
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
     public String getTelefono() {
         return telefono;
     }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
     
+
     @Override
     public String toString() {
         return """

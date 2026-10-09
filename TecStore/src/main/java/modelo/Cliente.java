@@ -1,29 +1,30 @@
 package modelo;
 
-import java.util.UUID;
-import java.util.function.Supplier;
-
 public class Cliente {
     
-    private final String id;
-    private final String nombre;
-    private final String cedula;
-    private final String correo;
-    private final String telefono;
+    private int id;
+    private String nombre;
+    private String cedula;
+    private String correo;
+    private String telefono;
 
     public Cliente(String nombre, String cedula, String correo, String telefono) {
-        this.id = generarID.get();
         this.nombre = nombre;
         this.cedula = cedula;
         this.correo = correo;
         this.telefono = telefono;
     }
+
+    public Cliente(int id, String nombre, String cedula, String correo, String telefono) {
+        this.id = id;
+        this.nombre = nombre;
+        this.cedula = cedula;
+        this.correo = correo;
+        this.telefono = telefono;
+    }
+
     
-      //SUPPLIER: generar un sku automatico cuando se cree un producto nuevo.
-    private static final Supplier<String> generarID=()-> 
-            "ID-"+UUID.randomUUID().toString().substring(0,4).toUpperCase();
-    
-    public String getId() {
+    public int getId() {
         return id;
     }
 
@@ -31,18 +32,36 @@ public class Cliente {
         return nombre;
     }
 
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
     public String getCedula() {
         return cedula;
+    }
+
+    public void setCedula(String cedula) {
+        this.cedula = cedula;
     }
 
     public String getCorreo() {
         return correo;
     }
 
+    public void setCorreo(String correo) {
+        this.correo = correo;
+    }
+
     public String getTelefono() {
         return telefono;
     }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
     
+    
+ 
     @Override
     public String toString() {
         return """

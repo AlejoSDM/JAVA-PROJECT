@@ -3,13 +3,12 @@ USE TecStoreAlejo;
 DELIMITER $$
 /*SE INSERTA LOS DATOS A EMPLEADO*/
 CREATE PROCEDURE sp_empleado_insertar(
-    IN p_id VARCHAR(20),
     IN p_nombre VARCHAR(100),
     IN p_telefono VARCHAR(30)
 )
 BEGIN
-    INSERT INTO empleado (id, nombre, telefono)
-    VALUES (p_id, p_nombre, p_telefono);
+    INSERT INTO empleado (nombre, telefono)
+    VALUES (p_nombre, p_telefono);
 END$$
 
 /*SE LISTAN LOS EMPLEADOS*/
@@ -21,7 +20,7 @@ END$$
 
 /*SE ACTUALIZAN LOS DATO DEL EMPLEADOS SEGUN SU ID*/
 CREATE PROCEDURE sp_empleado_actualizar(
-    IN p_id VARCHAR(20),
+    IN p_id INT,
     IN p_nombre VARCHAR(100),
     IN p_telefono VARCHAR(30)
 )
@@ -34,7 +33,7 @@ END$$
 /*SE ELIMINA EL EMPLEADO DE LA BASE DE DATOS*/
 DROP PROCEDURE IF EXISTS sp_empleado_eliminar$$
 CREATE PROCEDURE sp_empleado_eliminar(
-    IN p_id VARCHAR(20)
+    IN p_id INT
 )
 BEGIN
     DELETE FROM empleado
