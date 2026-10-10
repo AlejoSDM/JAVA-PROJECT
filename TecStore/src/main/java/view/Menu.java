@@ -84,7 +84,22 @@ public class Menu {
     public int mostrarMenuCompraCliente() {
         System.out.println("""
                 === COMPRA COMO CLIENTE ===
-                1. Ver celulares y comprar
+                1. Ver celulares
+                2. Comprar
+                0. Volver
+                """);
+
+        return validaciones.validarEntero("Seleccione una opción: ");
+    }
+
+
+
+    public int mostrarMenuReportes() {
+        System.out.println("""
+                === COMPRA COMO CLIENTE ===
+                1. Ver reportes
+                2. Stock bajo
+                3. Ventas totales
                 0. Volver
                 """);
 

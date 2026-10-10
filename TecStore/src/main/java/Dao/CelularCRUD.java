@@ -7,10 +7,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import modelo.CategoriaGama;
 import modelo.Celular;
 import modelo.Marca;
 import modelo.SistemaOperativo;
-import modelo.CategoriaGama;
 
 public class CelularCRUD {
 
@@ -18,7 +18,6 @@ public class CelularCRUD {
         String sql = "{CALL sp_celular_insertar(?, ?, ?, ?, ?, ?, ?)}";
 
         try (
-            /*ACA LLAMA EL SINGLETON*/
             Connection conexion = ConexionDao.getInstance().conexion();
             CallableStatement llamada = conexion.prepareCall(sql)
         ) {
@@ -84,25 +83,21 @@ public class CelularCRUD {
         }
     }
 
-    /*EL RESULTSET ES LO QUE NOS AYUDA A LEER EL RESULTADO DE LA TABLA Y CONVERTIRLO EN UN OBJETO
-    LO CONVERTIMOS A OBJETO PARA QUE CUANDO SE CIERRE LA CONEXION NO SE PIERDA LA CONSULTA
-    Y SIGA EL RESULTADO INDEPENDIENTEMENTE*/
     private Celular convertirCelular(ResultSet rs) throws SQLException {
         Marca marca = new Marca(
             rs.getInt("marca_id"),
             rs.getString("marca_nombre")
         );
 
-        Celular celular = new Celular(
+        return new Celular(
             rs.getInt("id"),
             marca,
             rs.getString("modelo"),
             SistemaOperativo.valueOf(rs.getString("sistema_operativo")),
             CategoriaGama.valueOf(rs.getString("gama")),
             rs.getDouble("precio"),
-            rs.getInt("stock"),
-            rs.getInt("stock_minimo")
+            rs.getInt("stock_minimo"), // El constructor recibe primero el stock mínimo
+            rs.getInt("stock")
         );
-        return celular;
     }
 }

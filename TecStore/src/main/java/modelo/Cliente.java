@@ -1,39 +1,27 @@
 package modelo;
 
-public class Cliente {
+public class Cliente extends Persona {
     
     private int id;
-    private String nombre;
     private String cedula;
     private String correo;
-    private String telefono;
 
     public Cliente(String nombre, String cedula, String correo, String telefono) {
-        this.nombre = nombre;
+        super(nombre, telefono);
         this.cedula = cedula;
         this.correo = correo;
-        this.telefono = telefono;
     }
 
     public Cliente(int id, String nombre, String cedula, String correo, String telefono) {
+        super(nombre, telefono);
         this.id = id;
-        this.nombre = nombre;
         this.cedula = cedula;
         this.correo = correo;
-        this.telefono = telefono;
     }
 
     
     public int getId() {
         return id;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
     }
 
     public String getCedula() {
@@ -52,16 +40,6 @@ public class Cliente {
         this.correo = correo;
     }
 
-    public String getTelefono() {
-        return telefono;
-    }
-
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
-    }
-    
-    
- 
     @Override
     public String toString() {
         return """
@@ -70,6 +48,12 @@ public class Cliente {
                CÉDULA:   %s
                CORREO:   %s
                TELÉFONO: %s
-               """.formatted(id, nombre, cedula, correo, telefono);
+                   """.formatted(
+                id,
+                getNombre(),
+                cedula,
+                correo,
+                getTelefono()
+            );
     }
 }

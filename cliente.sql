@@ -47,3 +47,17 @@ BEGIN
 END$$
 
 DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE sp_cliente_buscar_por_cedula(
+    IN p_cedula VARCHAR(50)
+)
+BEGIN
+    SELECT id, nombre, cedula, correo, telefono
+    FROM cliente
+    WHERE cedula = TRIM(p_cedula)
+    LIMIT 1;
+END //
+
+DELIMITER ;

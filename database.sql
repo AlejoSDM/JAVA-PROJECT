@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS celular (
         FOREIGN KEY (marca_id) REFERENCES marca(id),
 
     CONSTRAINT chk_celular_precio
-        CHECK (precio >= 0),
+        CHECK (precio > 0),
 
     CONSTRAINT chk_celular_stock
         CHECK (stock >= 0 AND stock_minimo >= 0)
@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS ventas (
     id INT NOT NULL AUTO_INCREMENT,
     fecha DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     total DOUBLE NOT NULL,
-    id_empleado INT NULL,
+    id_empleado INT NOT NULL,
     id_cliente INT NOT NULL,
 
     PRIMARY KEY (id),
@@ -80,7 +80,11 @@ CREATE TABLE IF NOT EXISTS detalle_ventas (
     id_celular INT NOT NULL,
     cantidad INT NOT NULL,
     precio_unitario DOUBLE NOT NULL,
-    subtotal DOUBLE NOT NULL,
+
+    subtotal DECIMAL(12,2)
+        GENERATED ALWAYS AS (
+            ROUND(cantidad * precio_unitario, 2)
+        ) STORED,
 
     PRIMARY KEY (id),
 

@@ -35,6 +35,10 @@ public class Celular {
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+    
     public Marca getMarca() {
         return marca;
     }

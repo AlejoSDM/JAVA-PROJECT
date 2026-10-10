@@ -84,6 +84,29 @@ public class ClienteCRUD {
             return llamada.executeUpdate() > 0;
         }
     }
+    
+    public Cliente buscarPorCedula(String cedula) throws SQLException {
+    if (cedula == null || cedula.isBlank()) {
+        throw new IllegalArgumentException("La cédula no puede estar vacía.");
+    }
+
+    String sql = "{CALL sp_cliente_buscar_por_cedula(?)}";
+
+    try (
+        Connection conexion = ConexionDao.getInstance().conexion();
+        CallableStatement llamada = conexion.prepareCall(sql)
+    ) {
+        llamada.setString(1, cedula.trim());
+
+        try (ResultSet rs = llamada.executeQuery()) {
+            if (rs.next()) {
+                return convertirCliente(rs);
+            }
+        }
+    }
+
+    return null; // No se encontró un cliente con esa cédula
+    }
 
     // Convertir la fila del ResultSet en un objeto Cliente
     private Cliente convertirCliente(ResultSet rs) throws SQLException {

@@ -4,151 +4,160 @@ import Dao.CelularCRUD;
 import java.sql.SQLException;
 import java.util.List;
 import modelo.Celular;
+import view.IngresoDatosCelular;
 import view.Menu;
 
 public class CelularController {
 
     private final CelularCRUD celularCRUD;
     private final Menu menu;
+    private final IngresoDatosCelular ingresoDatos = new IngresoDatosCelular();
 
     public CelularController(CelularCRUD celularCRUD, Menu menu) {
         this.celularCRUD = celularCRUD;
         this.menu = menu;
     }
 
-    // REGISTRAR
     public boolean registrar(Celular celular) throws SQLException {
         validarCelular(celular);
         return celularCRUD.insertar(celular);
     }
 
-    // LISTAR
     public List<Celular> listar() throws SQLException {
         return celularCRUD.listar();
     }
 
-    // ACTUALIZAR
     public boolean actualizar(Celular celular) throws SQLException {
         validarCelular(celular);
         validarId(celular.getId());
-
         return celularCRUD.actualizar(celular);
     }
 
-    // ELIMINAR
     public boolean eliminar(int id) throws SQLException {
         validarId(id);
         return celularCRUD.eliminar(id);
     }
 
-    // VALIDAR ID
     private void validarId(int id) {
         if (id <= 0) {
-            throw new IllegalArgumentException(
-                "Debes ingresar un ID válido."
-            );
+            throw new IllegalArgumentException("Debes ingresar un ID válido.");
         }
     }
 
-    // VALIDAR DATOS DEL CELULAR
     private void validarCelular(Celular celular) {
         if (celular == null) {
+            throw new IllegalArgumentException("El celular no puede ser nulo.");
+        }
+
+        if (celular.getMarca() == null || celular.getMarca().getId() <= 0) {
+            throw new IllegalArgumentException("Debes seleccionar una marca válida.");
+        }
+
+        if (celular.getModelo() == null || celular.getModelo().isBlank()) {
+            throw new IllegalArgumentException("El modelo no puede estar vacío.");
+        }
+
+        if (celular.getSistemaop() == null || celular.getGama() == null) {
             throw new IllegalArgumentException(
-                "El celular no puede ser nulo."
+                    "Debes seleccionar el sistema operativo y la gama."
             );
         }
 
-        if (celular.getMarca() == null) {
+        if (!Double.isFinite(celular.getPrecio()) || celular.getPrecio() <= 0) {
             throw new IllegalArgumentException(
-                "Debes seleccionar una marca."
+                    "El precio debe ser válido y mayor que cero."
             );
         }
 
-        if (celular.getModelo() == null
-                || celular.getModelo().isBlank()) {
+        if (celular.getStock() <= 0) {
             throw new IllegalArgumentException(
-                "El modelo no puede estar vacío."
+                    "El stock inicial debe ser mayor que cero."
             );
         }
 
-        if (celular.getSistemaop() == null
-                || celular.getGama() == null) {
+        if (celular.getStock_minimo() < 0) {
             throw new IllegalArgumentException(
-                "Debes seleccionar el sistema operativo y la gama."
-            );
-        }
-
-        if (!Double.isFinite(celular.getPrecio())
-                || celular.getPrecio() < 0) {
-            throw new IllegalArgumentException(
-                "El precio debe ser válido y no negativo."
-            );
-        }
-
-        if (celular.getStock() < 0
-                || celular.getStock_minimo() < 0) {
-            throw new IllegalArgumentException(
-                "El stock no puede ser negativo."
+                    "El stock mínimo no puede ser negativo."
             );
         }
     }
 
-    // MENÚ DE GESTIÓN
     public void menu() {
-        int op;
+        int opcion;
 
         do {
-            op = menu.mostrarMenuCelulares();
+            opcion = menu.mostrarMenuCelulares();
 
             try {
-                switch (op) {
-
-                    case 1 -> {
-                        List<Celular> celulares = listar();
-
-                        System.out.println("\n=== CELULARES ===");
-
-                        if (celulares.isEmpty()) {
-                            System.out.println(
-                                "No hay celulares registrados."
-                            );
-                        } else {
-                            celulares.forEach(System.out::println);
-                        }
-                    }
-
-                    case 2 -> {
-                        System.out.println(
-                            "El registro necesita capturar los datos "
-                            + "desde la vista."
-                        );
-                    }
-
-                    case 3 -> {
-                        System.out.println(
-                            "La actualización necesita capturar el ID "
-                            + "y los nuevos datos desde la vista."
-                        );
-                    }
-
-                    case 4 -> {
-                        System.out.println(
-                            "Para eliminar, llama al método eliminar(id) "
-                            + "con el ID ingresado en la vista."
-                        );
-                    }
-
-                    case 0 ->
-                        System.out.println("Volviendo al administrador...");
-
-                    default ->
-                        System.out.println("Opción no válida.");
+                switch (opcion) {
+                    case 1 -> mostrarCelulares();
+                    case 2 -> agregarCelular();
+                    case 3 -> actualizarCelular();
+                    case 4 -> eliminarCelular();
+                    case 0 -> System.out.println("Volviendo al administrador...");
+                    default -> System.out.println("Opción no válida.");
                 }
-
-            } catch (SQLException | IllegalArgumentException e) {
+            } catch (SQLException | RuntimeException e) {
                 System.out.println("Error: " + e.getMessage());
             }
+        } while (opcion != 0);
+    }
 
-        } while (op != 0);
+    private void mostrarCelulares() throws SQLException {
+        List<Celular> celulares = listar();
+
+        System.out.println("\n=== CELULARES ===");
+
+        if (celulares.isEmpty()) {
+            System.out.println("No hay celulares registrados.");
+            return;
+        }
+
+        celulares.forEach(System.out::println);
+    }
+
+    private void agregarCelular() throws SQLException {
+        System.out.println("\n=== AGREGAR CELULAR ===");
+
+        Celular celular = ingresoDatos.ingresoDatos();
+
+        if (registrar(celular)) {
+            System.out.println("Celular registrado correctamente.");
+        } else {
+            System.out.println("No se pudo registrar el celular.");
+        }
+    }
+
+    private void actualizarCelular() throws SQLException {
+        System.out.println("\n=== ACTUALIZAR CELULAR ===");
+
+        int id = ingresoId("ID del celular que deseas actualizar: ");
+        Celular celular = ingresoDatos.ingresoDatos();
+        celular.setId(id);
+
+        if (actualizar(celular)) {
+            System.out.println("Celular actualizado correctamente.");
+        } else {
+            System.out.println("No se encontró el celular o no se pudo actualizar.");
+        }
+    }
+
+    private void eliminarCelular() throws SQLException {
+        System.out.println("\n=== ELIMINAR CELULAR ===");
+
+        int id = ingresoId("ID del celular que deseas eliminar: ");
+
+        if (eliminar(id)) {
+            System.out.println("Celular eliminado correctamente.");
+        } else {
+            System.out.println("No se encontró el celular o no se pudo eliminar.");
+        }
+    }
+    
+    /*ingresoId solo sirve para pedir y validar el ID del celular antes
+    de actualizarlo o eliminarlo. Evita repetir la llamada a validarEntero.*/
+    private int ingresoId(String mensaje) {
+        // Se usa la validación del menú para leer un entero.
+        return new view.Validaciones().validarEntero(mensaje);
     }
 }
