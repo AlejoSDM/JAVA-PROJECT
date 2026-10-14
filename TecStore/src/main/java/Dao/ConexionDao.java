@@ -8,8 +8,8 @@ public final class ConexionDao {
 
     private static final String URL =
             "jdbc:mysql://localhost:3306/TecStoreAlejo";
-    private static final String USUARIO = "root";
-    private static final String CONTRASENA = "Isaias";
+    private static final String USUARIO = "campus2023";
+    private static final String CONTRASENA = "campus2023";
     
 
     private ConexionDao() {
