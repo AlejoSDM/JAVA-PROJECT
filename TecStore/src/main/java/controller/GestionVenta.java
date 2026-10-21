@@ -57,7 +57,7 @@ public class GestionVenta {
             );
 
             mostrarFactura(ventaId, cliente, empleado, productos);
-
+            
         } catch (SQLException | IllegalArgumentException e) {
             System.out.println(
                     "No se pudo completar la compra: " + e.getMessage()

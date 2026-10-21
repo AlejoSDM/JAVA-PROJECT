@@ -19,6 +19,8 @@ import Dao.ReporteCRUD.VentaReporte;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import view.Menu;
 
 
@@ -63,7 +65,6 @@ public class ReporteController {
         try {
             List<VentaReporte> ventas = reporteCRUD.listarVentas();
             List<DetalleReporte> detalles = reporteCRUD.listarDetalles();
-
             mostrarVentasPorMes(ventas);
             generarArchivoVentas(ventas, detalles);
         } catch (SQLException | IOException e) {
@@ -81,7 +82,8 @@ public class ReporteController {
             mostrarTopTres(detalles);
             mostrarVentasPorMes(ventas);
             generarArchivoVentas(ventas, detalles);
-
+            generarArchivoStock(celulares);
+            
         } catch (java.sql.SQLException | IOException e) {
             System.out.println("No se pudieron generar los reportes: "
                     + e.getMessage());
@@ -190,7 +192,7 @@ public class ReporteController {
 
         Path carpetaDescargas = Paths.get(
                 System.getProperty("user.home"),
-                "Downloads"
+                "Descargas"
         );
 
         Files.createDirectories(carpetaDescargas);
@@ -237,10 +239,58 @@ public class ReporteController {
                 }
 
                 writer.newLine();
+                
             }
         }
 
         System.out.println("\nArchivo generado: "
                 + archivo.toAbsolutePath());
     }
+
+
+
+    private void generarArchivoStock(
+        List<CelularReporte> celulares
+     ) throws IOException {
+
+         Path carpetaDescargas = Paths.get(
+                 System.getProperty("user.home"),
+                 "Descargas"
+         );
+
+         Files.createDirectories(carpetaDescargas);
+
+         Path archivo = carpetaDescargas.resolve("reporte_stock.txt");
+
+         try (BufferedWriter writer = Files.newBufferedWriter(
+                 archivo,
+                 StandardCharsets.UTF_8
+         )) {
+
+                 List<CelularReporte> stockBajo = celulares.stream()
+                 .filter(celular -> celular.stock < 5)
+                 .sorted(Comparator.comparingInt(celular -> celular.stock))
+                 .collect(Collectors.toList());
+
+                 if (stockBajo.isEmpty()) {
+                     writer.write("No hay celulares con stock menor a 5.");
+                     return;
+                 }
+
+                 writer.write("STOCK BAJO: ");
+                 stockBajo.forEach(celular ->
+                         {
+                     try {
+                         writer.newLine();
+                         writer.write(celular.nombreCompleto()
+                                 + " | Stock: " + celular.stock );
+                     } catch (IOException ex) {
+                         Logger.getLogger(ReporteController.class.getName()).log(Level.SEVERE, null, ex);
+                     }
+                 });
+             }
+         }
+
+
 }
+

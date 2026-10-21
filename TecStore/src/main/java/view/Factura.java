@@ -50,7 +50,7 @@ public class Factura {
                 );
                 continue;
             }
-
+            
             BigDecimal precioUnitario =
                     BigDecimal.valueOf(celular.getPrecio());
 
